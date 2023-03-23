@@ -47,8 +47,8 @@
         "rap": true,
         "rh": 0,
         "inputs": 1,
-        "x": 170,
-        "y": 120,
+        "x": 350,
+        "y": 200,
         "wires": [
             [
                 "4f44c31817038577"
@@ -80,5 +80,29 @@
         "x": 340,
         "y": 120,
         "wires": []
+    },
+    {
+        "id": "9ca1957f9ebde18b",
+        "type": "inject",
+        "z": "d8a1e1f7a8a408cc",
+        "name": "",
+        "props": [
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 110,
+        "y": 220,
+        "wires": [
+            [
+                "2bd397339577de7e"
+            ]
+        ]
     }
 ]
