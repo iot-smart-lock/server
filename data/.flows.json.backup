@@ -39,7 +39,7 @@
         "type": "mqtt in",
         "z": "d8a1e1f7a8a408cc",
         "name": "TTN-Server",
-        "topic": "v3/iot-smart-lock/devices/eui-70b3d57ed005bc62/up",
+        "topic": "v3/iot-smart-lock@ttn/devices/+/up",
         "qos": "1",
         "datatype": "auto-detect",
         "broker": "e0a3e6d347f0fc62",
@@ -51,8 +51,7 @@
         "y": 120,
         "wires": [
             [
-                "4f44c31817038577",
-                "2df6247cd1476bbf"
+                "444f8ed2257d9cfa"
             ]
         ]
     },
@@ -67,10 +66,124 @@
         "wires": []
     },
     {
-        "id": "4f44c31817038577",
+        "id": "444f8ed2257d9cfa",
+        "type": "function",
+        "z": "d8a1e1f7a8a408cc",
+        "name": "Get Payload",
+        "func": "let payload = msg.payload\nlet data = payload.uplink_message.decoded_payload\ndata[\"device_id\"] = payload.end_device_ids.device_id\nvar newMsg = { payload: data };\nreturn newMsg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 410,
+        "y": 120,
+        "wires": [
+            [
+                "b0a5e25253dec58a",
+                "73a83b998618d2c3"
+            ]
+        ]
+    },
+    {
+        "id": "b0a5e25253dec58a",
+        "type": "function",
+        "z": "d8a1e1f7a8a408cc",
+        "name": "Store data",
+        "func": "let id = msg.payload.device_id\nglobal.set(id, msg.payload)\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 690,
+        "y": 160,
+        "wires": [
+            [
+                "21b7af50ac61e03d"
+            ]
+        ]
+    },
+    {
+        "id": "becb33836bb7a0e6",
+        "type": "http in",
+        "z": "d8a1e1f7a8a408cc",
+        "name": "[GET] Get Device Information",
+        "url": "/:device_id",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 180,
+        "y": 360,
+        "wires": [
+            [
+                "388ddb532c8479b2"
+            ]
+        ]
+    },
+    {
+        "id": "ef3f280c708d69e7",
+        "type": "comment",
+        "z": "d8a1e1f7a8a408cc",
+        "name": "HTTP-Request of app",
+        "info": "",
+        "x": 160,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "81250868e3f57432",
+        "type": "http response",
+        "z": "d8a1e1f7a8a408cc",
+        "name": "Response",
+        "statusCode": "",
+        "headers": {},
+        "x": 690,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "388ddb532c8479b2",
+        "type": "function",
+        "z": "d8a1e1f7a8a408cc",
+        "name": "Get data from cache",
+        "func": "const id = msg.req.params.device_id\nif (global.keys().includes(id)){\n    msg.statusCode = 200\n    msg.payload = global.get(id)\n} else {\n    msg.statusCode = 404\n    msg.payload = {\n        \"msg\": \"ID not found.\",\n        \"id\": id,\n    }\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 460,
+        "y": 360,
+        "wires": [
+            [
+                "81250868e3f57432",
+                "4f6133be577a9ea9"
+            ]
+        ]
+    },
+    {
+        "id": "21b7af50ac61e03d",
+        "type": "function",
+        "z": "d8a1e1f7a8a408cc",
+        "name": "function 1",
+        "func": "\nreturn {\"id\": global.keys()};",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 920,
+        "y": 160,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "73a83b998618d2c3",
         "type": "debug",
         "z": "d8a1e1f7a8a408cc",
-        "name": "Payload",
+        "name": "Receive Data",
         "active": true,
         "tosidebar": true,
         "console": true,
@@ -79,25 +192,25 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 430,
-        "y": 160,
+        "x": 700,
+        "y": 100,
         "wires": []
     },
     {
-        "id": "2df6247cd1476bbf",
+        "id": "4f6133be577a9ea9",
         "type": "debug",
         "z": "d8a1e1f7a8a408cc",
-        "name": "Msg",
+        "name": "Provide Data",
         "active": true,
         "tosidebar": true,
         "console": true,
         "tostatus": false,
-        "complete": "true",
-        "targetType": "full",
+        "complete": "payload",
+        "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 410,
-        "y": 120,
+        "x": 700,
+        "y": 420,
         "wires": []
     }
 ]
