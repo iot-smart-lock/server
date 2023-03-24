@@ -39,19 +39,20 @@
         "type": "mqtt in",
         "z": "d8a1e1f7a8a408cc",
         "name": "TTN-Server",
-        "topic": "",
-        "qos": "2",
+        "topic": "v3/iot-smart-lock/devices/eui-70b3d57ed005bc62/up",
+        "qos": "1",
         "datatype": "auto-detect",
         "broker": "e0a3e6d347f0fc62",
         "nl": false,
         "rap": true,
         "rh": 0,
-        "inputs": 1,
-        "x": 350,
-        "y": 200,
+        "inputs": 0,
+        "x": 170,
+        "y": 120,
         "wires": [
             [
-                "4f44c31817038577"
+                "4f44c31817038577",
+                "2df6247cd1476bbf"
             ]
         ]
     },
@@ -69,40 +70,34 @@
         "id": "4f44c31817038577",
         "type": "debug",
         "z": "d8a1e1f7a8a408cc",
-        "name": "debug 1",
+        "name": "Payload",
         "active": true,
         "tosidebar": true,
-        "console": false,
+        "console": true,
         "tostatus": false,
-        "complete": "false",
+        "complete": "payload",
+        "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 340,
-        "y": 120,
+        "x": 430,
+        "y": 160,
         "wires": []
     },
     {
-        "id": "9ca1957f9ebde18b",
-        "type": "inject",
+        "id": "2df6247cd1476bbf",
+        "type": "debug",
         "z": "d8a1e1f7a8a408cc",
-        "name": "",
-        "props": [
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "x": 110,
-        "y": 220,
-        "wires": [
-            [
-                "2bd397339577de7e"
-            ]
-        ]
+        "name": "Msg",
+        "active": true,
+        "tosidebar": true,
+        "console": true,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 410,
+        "y": 120,
+        "wires": []
     }
 ]
