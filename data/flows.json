@@ -99,9 +99,7 @@
         "x": 690,
         "y": 160,
         "wires": [
-            [
-                "21b7af50ac61e03d"
-            ]
+            []
         ]
     },
     {
@@ -160,23 +158,6 @@
                 "81250868e3f57432",
                 "4f6133be577a9ea9"
             ]
-        ]
-    },
-    {
-        "id": "21b7af50ac61e03d",
-        "type": "function",
-        "z": "d8a1e1f7a8a408cc",
-        "name": "function 1",
-        "func": "\nreturn {\"id\": global.keys()};",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 920,
-        "y": 160,
-        "wires": [
-            []
         ]
     },
     {
