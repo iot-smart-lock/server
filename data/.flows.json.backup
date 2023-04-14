@@ -90,7 +90,7 @@
         "type": "function",
         "z": "d8a1e1f7a8a408cc",
         "name": "Store data",
-        "func": "let id = msg.payload.device_id\nglobal.set(id, msg.payload)\nreturn msg;",
+        "func": "let id = msg.payload.device_id\nglobal.set(id, msg.payload)\n\nlet all = {}\nfor (let key of global.keys()){\n    all[key] = global.get(key)\n}\nreturn { payload: all}",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -100,7 +100,7 @@
         "y": 160,
         "wires": [
             [
-                "21b7af50ac61e03d"
+                "f1fc4aef9aa7e349"
             ]
         ]
     },
@@ -163,23 +163,6 @@
         ]
     },
     {
-        "id": "21b7af50ac61e03d",
-        "type": "function",
-        "z": "d8a1e1f7a8a408cc",
-        "name": "function 1",
-        "func": "\nreturn {\"id\": global.keys()};",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 920,
-        "y": 160,
-        "wires": [
-            []
-        ]
-    },
-    {
         "id": "73a83b998618d2c3",
         "type": "debug",
         "z": "d8a1e1f7a8a408cc",
@@ -212,5 +195,178 @@
         "x": 700,
         "y": 420,
         "wires": []
+    },
+    {
+        "id": "f1fc4aef9aa7e349",
+        "type": "json",
+        "z": "d8a1e1f7a8a408cc",
+        "name": "JSON",
+        "property": "payload",
+        "action": "str",
+        "pretty": true,
+        "x": 870,
+        "y": 160,
+        "wires": [
+            [
+                "13816f1b19f01735"
+            ]
+        ]
+    },
+    {
+        "id": "13816f1b19f01735",
+        "type": "file",
+        "z": "d8a1e1f7a8a408cc",
+        "name": "Save to JSON",
+        "filename": "/data/data.json",
+        "filenameType": "str",
+        "appendNewline": false,
+        "createDir": false,
+        "overwriteFile": "true",
+        "encoding": "utf8",
+        "x": 1060,
+        "y": 160,
+        "wires": [
+            [
+                "b21ad4333bfc7bfd"
+            ]
+        ]
+    },
+    {
+        "id": "60bda38fa334d34c",
+        "type": "file in",
+        "z": "d8a1e1f7a8a408cc",
+        "name": "Read Json",
+        "filename": "/data/data.json",
+        "filenameType": "str",
+        "format": "utf8",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "utf8",
+        "allProps": false,
+        "x": 410,
+        "y": 240,
+        "wires": [
+            [
+                "88a1185605d5f3ef"
+            ]
+        ]
+    },
+    {
+        "id": "b21ad4333bfc7bfd",
+        "type": "debug",
+        "z": "d8a1e1f7a8a408cc",
+        "name": "Receive Data",
+        "active": true,
+        "tosidebar": true,
+        "console": true,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1260,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "9de15c09f6c0b203",
+        "type": "inject",
+        "z": "d8a1e1f7a8a408cc",
+        "name": "Init",
+        "props": [],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 150,
+        "y": 240,
+        "wires": [
+            [
+                "60bda38fa334d34c"
+            ]
+        ]
+    },
+    {
+        "id": "88a1185605d5f3ef",
+        "type": "json",
+        "z": "d8a1e1f7a8a408cc",
+        "name": "To Object",
+        "property": "payload",
+        "action": "obj",
+        "pretty": true,
+        "x": 680,
+        "y": 240,
+        "wires": [
+            [
+                "587a6cbc2c4bdf7f"
+            ]
+        ]
+    },
+    {
+        "id": "587a6cbc2c4bdf7f",
+        "type": "function",
+        "z": "d8a1e1f7a8a408cc",
+        "name": "Load data",
+        "func": "let devices = msg.payload\n\nfor (let k of Object.keys(devices)) {\n    global.set(k, devices[k])\n}\nreturn { payload: devices }",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 880,
+        "y": 240,
+        "wires": [
+            [
+                "ef5978979121d201"
+            ]
+        ]
+    },
+    {
+        "id": "ef5978979121d201",
+        "type": "debug",
+        "z": "d8a1e1f7a8a408cc",
+        "name": "Init",
+        "active": true,
+        "tosidebar": true,
+        "console": true,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1030,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "ae12c7c7e44e3ee9",
+        "type": "inject",
+        "z": "d8a1e1f7a8a408cc",
+        "name": "Init",
+        "props": [
+            {
+                "p": "payload.device_id",
+                "v": "eui-1234556",
+                "vt": "str"
+            },
+            {
+                "p": "payload.data",
+                "v": "sdfg",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "5",
+        "topic": "",
+        "x": 310,
+        "y": 180,
+        "wires": [
+            [
+                "b0a5e25253dec58a"
+            ]
+        ]
     }
 ]

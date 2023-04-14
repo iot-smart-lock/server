@@ -48,7 +48,7 @@
         "rh": 0,
         "inputs": 0,
         "x": 170,
-        "y": 120,
+        "y": 220,
         "wires": [
             [
                 "444f8ed2257d9cfa"
@@ -62,7 +62,7 @@
         "name": "Connection from TTN-Server",
         "info": "",
         "x": 180,
-        "y": 60,
+        "y": 160,
         "wires": []
     },
     {
@@ -77,7 +77,7 @@
         "finalize": "",
         "libs": [],
         "x": 410,
-        "y": 120,
+        "y": 220,
         "wires": [
             [
                 "b0a5e25253dec58a",
@@ -90,16 +90,18 @@
         "type": "function",
         "z": "d8a1e1f7a8a408cc",
         "name": "Store data",
-        "func": "let id = msg.payload.device_id\nglobal.set(id, msg.payload)\nreturn msg;",
+        "func": "let id = msg.payload.device_id\nglobal.set(id, msg.payload)\n\nlet all = {}\nfor (let key of global.keys()){\n    all[key] = global.get(key)\n}\nreturn { payload: all}",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
         "x": 690,
-        "y": 160,
+        "y": 260,
         "wires": [
-            []
+            [
+                "f1fc4aef9aa7e349"
+            ]
         ]
     },
     {
@@ -112,7 +114,7 @@
         "upload": false,
         "swaggerDoc": "",
         "x": 180,
-        "y": 360,
+        "y": 380,
         "wires": [
             [
                 "388ddb532c8479b2"
@@ -126,7 +128,7 @@
         "name": "HTTP-Request of app",
         "info": "",
         "x": 160,
-        "y": 300,
+        "y": 320,
         "wires": []
     },
     {
@@ -137,7 +139,7 @@
         "statusCode": "",
         "headers": {},
         "x": 690,
-        "y": 360,
+        "y": 380,
         "wires": []
     },
     {
@@ -152,7 +154,7 @@
         "finalize": "",
         "libs": [],
         "x": 460,
-        "y": 360,
+        "y": 380,
         "wires": [
             [
                 "81250868e3f57432",
@@ -174,7 +176,7 @@
         "statusVal": "",
         "statusType": "auto",
         "x": 700,
-        "y": 100,
+        "y": 200,
         "wires": []
     },
     {
@@ -191,7 +193,160 @@
         "statusVal": "",
         "statusType": "auto",
         "x": 700,
-        "y": 420,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "f1fc4aef9aa7e349",
+        "type": "json",
+        "z": "d8a1e1f7a8a408cc",
+        "name": "JSON",
+        "property": "payload",
+        "action": "str",
+        "pretty": true,
+        "x": 870,
+        "y": 260,
+        "wires": [
+            [
+                "13816f1b19f01735"
+            ]
+        ]
+    },
+    {
+        "id": "13816f1b19f01735",
+        "type": "file",
+        "z": "d8a1e1f7a8a408cc",
+        "name": "Save to JSON",
+        "filename": "/data/data.json",
+        "filenameType": "str",
+        "appendNewline": false,
+        "createDir": false,
+        "overwriteFile": "true",
+        "encoding": "utf8",
+        "x": 1060,
+        "y": 260,
+        "wires": [
+            [
+                "b21ad4333bfc7bfd"
+            ]
+        ]
+    },
+    {
+        "id": "60bda38fa334d34c",
+        "type": "file in",
+        "z": "d8a1e1f7a8a408cc",
+        "name": "Read Json",
+        "filename": "/data/data.json",
+        "filenameType": "str",
+        "format": "utf8",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "utf8",
+        "allProps": false,
+        "x": 410,
+        "y": 100,
+        "wires": [
+            [
+                "88a1185605d5f3ef"
+            ]
+        ]
+    },
+    {
+        "id": "b21ad4333bfc7bfd",
+        "type": "debug",
+        "z": "d8a1e1f7a8a408cc",
+        "name": "Receive Data",
+        "active": true,
+        "tosidebar": true,
+        "console": true,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1260,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "9de15c09f6c0b203",
+        "type": "inject",
+        "z": "d8a1e1f7a8a408cc",
+        "name": "Init",
+        "props": [],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 170,
+        "y": 100,
+        "wires": [
+            [
+                "60bda38fa334d34c"
+            ]
+        ]
+    },
+    {
+        "id": "88a1185605d5f3ef",
+        "type": "json",
+        "z": "d8a1e1f7a8a408cc",
+        "name": "To Object",
+        "property": "payload",
+        "action": "obj",
+        "pretty": true,
+        "x": 680,
+        "y": 100,
+        "wires": [
+            [
+                "587a6cbc2c4bdf7f"
+            ]
+        ]
+    },
+    {
+        "id": "587a6cbc2c4bdf7f",
+        "type": "function",
+        "z": "d8a1e1f7a8a408cc",
+        "name": "Load data",
+        "func": "let devices = msg.payload\n\nfor (let k of Object.keys(devices)) {\n    global.set(k, devices[k])\n}\nreturn { payload: devices }",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 880,
+        "y": 100,
+        "wires": [
+            [
+                "ef5978979121d201"
+            ]
+        ]
+    },
+    {
+        "id": "ef5978979121d201",
+        "type": "debug",
+        "z": "d8a1e1f7a8a408cc",
+        "name": "Init",
+        "active": true,
+        "tosidebar": true,
+        "console": true,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1030,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "98b8e8f1ac1c6c74",
+        "type": "comment",
+        "z": "d8a1e1f7a8a408cc",
+        "name": "Initial context",
+        "info": "",
+        "x": 130,
+        "y": 40,
         "wires": []
     }
 ]
