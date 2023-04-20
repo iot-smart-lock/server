@@ -173,7 +173,7 @@ resource "azurerm_virtual_machine" "myweb" {
       "git clone https://github.com/iot-smart-lock/server.git",
       "cd server",
       "sudo docker build .",
-      "sudo docker compose up",
+      "sudo docker compose up -d"
     ]
   }
 }
